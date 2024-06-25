@@ -1,0 +1,43 @@
+patient_id,patient_name,household_id,family_id,household_member_count,age,sex,maldi_id,escre
+101,"Simpson, Lisa",1001,10001,5,8,female,,0
+102,"Simpson, Bart",1001,10001,5,10,male,Escherichia coli,1
+103,"Simpson, Marge",1001,10001,5,40,female,Klebsiella oxytoca,1
+104,"Simpson, Maggie",1001,10001,5,1,female,Escherichia coli,1
+105,"Simpson, Homer",1001,10001,5,42,male,Escherichia coli,1
+106,"Simpson, Mona",1002,10001,1,78,female,,0
+107,"Simpson, Abraham",1003,10001,2,80,male,Citrobacter freundii,1
+108,"Beardly, Jasper",1003,10002,2,82,male,Citrobacter freundii,1
+109,"Burns, Charles",1004,10003,2,76,male,Escherichia coli,1
+110,"Smithers, Waylon",1004,10004,2,44,male,Escherichia coli,1
+111,"Flanders, Ned",1005,10005,4,45,male,,0
+112,"Flanders, Maude",1005,10005,4,43,female,,0
+113,"Flanders, Rod",1005,10005,4,10,male,,0
+114,"Flanders, Todd",1005,10005,4,8,male,,0
+115,"Szyslak, Moammar",1006,10006,1,48,male,Escherichia coli,1
+116,"Gumble, Barnard",1007,10007,1,40,male,Enterobacter cloacae,1
+117,"Bouvier, Patty",1008,10001,2,44,female,Klebsiella oxytoca,1
+118,"Bouvier, Selma",1008,10001,2,46,female,Klebsiella oxytoca,1
+119,"Bouvier, Jacqueline",1009,10001,1,83,female,Escherichia coli,1
+120,"Van Houten, Milhouse",1010,10008,3,10,male,Citrobacter braakii,1
+121,"Van Houten, Luann",1010,10008,3,45,female,,0
+122,"Van Houten, Kirk",1010,10008,3,46,male,Citrobacter braakii,1
+123,"Krustofsky, Hyman",1011,10009,1,80,male,,0
+124,"Krustofsky, Herschel",1012,10009,1,47,male,Enterobacter ludwigii,1
+125,"Wiggum, Ralph",1013,10010,3,10,male,Enterobacter cloacae complex,1
+126,"Wiggum, Clancy",1013,10010,3,47,male,Enterobacter cloacae complex,1
+127,"Wiggum, Sarah",1013,10010,3,46,female,Enterobacter cloacae complex,1
+128,"MacDougal, Willie",1014,10011,1,55,male,,0
+129,"Terwilliger, Robert",1015,10012,3,48,male,Pantoea agglomerans,1
+130,"Terwilliger, Cecil",1015,10012,3,42,male,,0
+131,"Terwilliger, Gino",1015,10012,3,2,male,Pantoea agglomerans,1
+132,"Skinner, Seymour",1016,10013,2,52,male,Serratia liquefaciens,1
+133,"Skinner, Agnes",1016,10013,2,88,female,Serratia liquefaciens,1
+134,"Duffman, Barry",1017,10014,1,58,male,,0
+135,"Discotheque, Stuart",1018,10015,1,46,male,,0
+136,"Chalmers, Gary",1019,10016,1,55,male,Escherichia coli,1
+137,"Abernathy, Eleanor",1020,10017,1,68,female,Toxoplasma gondii,0
+138,"Krabappel, Edna",1021,10018,1,52,male,Klebsiella pneumoniae,1
+139,"Brockman, Kent",1022,10019,1,50,male,,0
+140,"Albertson, Jeff",1023,10020,1,47,male,staphylococcus aureus,0
+141,"Mann, Otto",1024,10021,1,32,male,Klebsiella pneumoniae,1
+142,"Carlson, Carl",1025,10022,1,48,male,,0
