@@ -1,0 +1,161 @@
+---
+title: "MOTION Lab R Code Club Session 3, Part 2"
+author: "Laura Cowden"
+date: "8/16/2024"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+# load necessary packages
+library(tidyverse) #contains ggplot2
+library(readxl)
+library(janitor)
+library(stringr)
+library(dplyr)
+library(xtable)
+library(gt)
+
+# set working directory
+setwd("H:/R files/codeclub_session3")
+```
+
+**ggplot2 Syntax**
+While R has built-in plotting functions, ggplot2 syntax is very simple and allows for a great amount of customization of your visualizations. Calling ggplot() creates a blank canvas, onto which, you can add layers of data, information and aesthetic choices. Running ?ggplot2() will bring up some helpful links for this function.
+
+*Create your canvas:*
+ggplot(df)
+
+*Map your variables of interest within aes():*
+ggplot(df, aes(x = variable1, y = variable2)
+
+*Plot the data:*
+ggplot(df, aes(x = variable1, y = variable2))+ 
+geom_point()
+
+Other geometric objects include: goem_line, geom_smooth, geom_bar, geom_histogram, geom_polygon, geom_boxplot, geom_map, etc. 
+
+**Boxplots**
+
+Experiment Background: In the process of validating a newly designed PCR assay, the assessment of inter- and intra-run precision of results is required. An increased difference among Ct values across runs was observed. We want to visualize the difference in Ct values for our target of interest (C. auris *ITS2*) across runs. This visualization is meant to help aid discussion among laboratory personnel at an informal meeting.
+
+```{r C. auris experiment, include = TRUE}
+#read data and clean names
+c_auris <- read_excel("candidaauris_codeclub.xlsx", sheet = 1)
+c_auris <- c_auris %>%
+  clean_names()
+
+#convert ct to numeric
+c_auris$c_auris_ct <- as.numeric(c_auris$c_auris_ct)
+
+#exclude controls for this visualization
+c_auris <- filter(c_auris, sample_name != "Toughmix Positive Control 03082024") 
+c_auris <- filter(c_auris, sample_name != "Toughmix Negative Control")
+c_auris <- filter(c_auris, sample_name != "Toughmix NTC")
+c_auris <- filter(c_auris, sample_name != "Toughmix Positive Control 03082024")
+
+# remove "toughmix" from the sample name; it will clutter the graph
+c_auris <- c_auris %>% 
+  separate(sample_name, into = c('mastermix', 'concentration_cfu_uL'), sep = ' ')
+
+#decided to remove cfu/uL from the concentrations also for the same reason
+c_auris <- c_auris %>% 
+  mutate(concentration_cfu_uL = (stringr::str_remove(concentration_cfu_uL, "cfu/uL"))) 
+
+#plot
+ggplot(c_auris, aes(concentration_cfu_uL, c_auris_ct, fill = run_name))+
+  geom_boxplot()
+
+#x axis was not in order as is; created a vector to define the order and re-plotted below
+#define the order
+level_order <- c('0.98','1.95','3.91','7.81','15.63','31.25','62.5','125') 
+
+#plot
+ggplot(c_auris, aes(concentration_cfu_uL, c_auris_ct, fill = run_name))+
+  geom_boxplot()+
+  scale_x_discrete(limits = level_order)
+```
+
+**Scatterplots and Multi-Panel Plots**
+
+Experiment Background: Different incubation temperatures were used to test for an effect on biofilm production of a particular organism. In a previous work, biofilm production was linked to *gene X* expression. We hope to publish this work.
+
+```{r biofilm exp, include = TRUE}
+#read data
+biofilm <- read_excel("biofilm_codeclub.xlsx")
+
+#basic scatterplot
+ggplot(biofilm, aes(temp_celcius, biofilm_od_595nm))+ 
+  geom_point()
+
+#changes point size and color, Note: aesthetics within geom_point() apply to all data
+ggplot(biofilm, aes(temp_celcius, biofilm_od_595nm))+ 
+  geom_point(size = 2, color = "blue")
+
+#changes point shape to a triangle
+ggplot(biofilm, aes(temp_celcius, biofilm_od_595nm))+ 
+  geom_point(size = 2, color = "blue", shape = 17)
+
+#changes color based on gene variable, changes opacity based on Ct value (metric of gene expression)
+ggplot(biofilm, aes(temp_celcius, biofilm_od_595nm, colour = gene_expressed, shape = gene_expressed, alpha = ct_value))+ 
+  geom_point(size = 2)
+
+#addes trendlines (not super helpful in this case, but may be in others!); lm creates a linear regression model, se refers to standard error
+ggplot(biofilm, aes(temp_celcius, biofilm_od_595nm, colour = gene_expressed, shape = gene_expressed, alpha = ct_value))+ 
+  geom_point(size = 2)+
+  geom_smooth(method = "lm", se = FALSE)
+
+#removing trendlines and adding labs()
+ggplot(biofilm, aes(temp_celcius, biofilm_od_595nm, colour = gene_expressed, shape = gene_expressed, alpha = ct_value))+ 
+  geom_point(size = 2)+
+  labs(
+    title = "Effect of Incubation Temperature on Gene X Expression and Biofilm Production",
+    subtitle = "Experiment 1, 8/19/2024",
+    caption = "MOTION Laboratory",
+    x = "Temperature (Celcius)",
+    y = "OD595"
+  )
+
+#Up to this point, we've been analyzing data from the entire cohort as whole. Let's see if there are any differences per strain (A, B and C). In doing so, we can create a multi-panel plot using facet_wrap() [from ggplot2].
+ggplot(biofilm, aes(temp_celcius, biofilm_od_595nm, colour = gene_expressed, shape = gene_expressed, alpha = ct_value))+ 
+  geom_point(size = 2)+
+  labs(
+    title = "Effect of Incubation Temperature on Gene X Expression and Biofilm Production",
+    subtitle = "Experiment 1, 8/19/2024",
+    caption = "MOTION Laboratory",
+    x = "Temperature (Celcius)",
+    y = "OD595")+
+  facet_wrap(~ strain)
+```
+
+**Tables**
+Experiment background: In this experiment, we've tested the antibiotic susceptibility of these isolates to some drug of interest. We want to see if there is direct correlation between biofilm production, gene X expression, and resistance pattern. 
+
+```{r biofilm exp 2, include = TRUE}
+
+# create a scatterplot depicting the relationship between antibiotic resistance and biofilm production
+ggplot(biofilm, aes(biofilm_od_595nm, ast_value, colour = gene_expressed, shape = gene_expressed, alpha = ct_value))+ 
+  geom_point(size = 2)
+
+# create summary data that will go into the table; in this case, average OD and AST values by gene expression and strain
+biofilm.summary <- biofilm %>%
+  group_by(gene_expressed, strain) %>%
+  summarise(mean_ast = mean(ast_value, na.rm = TRUE),
+            mean_od = mean(biofilm_od_595nm, na.rm = TRUE))
+
+# I used the gt() package here, but there are other really great tools to make tables. I also enjoy kable() and kableExtras(). 
+biofilm.summary %>%
+  gt() %>%
+  tab_header(title = "Biofilm Production Enhances Bacterial Virulence",
+             subtitle = "Includes cultures grown at temperatures 30-37 degrees Celcius")%>%
+  opt_align_table_header(align = "center") %>%
+  tab_style(
+    style = list(cell_fill(color = "#b2f7ef"),
+                 cell_text_idx = (weight = "bold")),
+    locations = cells_body(rows = 3)) %>%
+      tab_style(
+        style = list(cell_fill(color = "#ffefb5"),
+                     cell_text_idx = (weight = "bold")),
+        locations = cells_body(rows = 6))
+```
