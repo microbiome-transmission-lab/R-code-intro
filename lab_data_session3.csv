@@ -1,0 +1,113 @@
+patient_id,specimen_type,maldi_id,ct_value,ct_interpretation,patient_age,patient_sex,collect_month_yr
+101,Human Stool,Escherichia coli,0.03,R,18,female,2023-01
+102,Human Stool,Escherichia coli,0.03,R,18,male,2023-01
+103,Human Stool,Escherichia coli,0.03,I,19,female,2023-01
+104,Human Stool,Escherichia coli,0.03,R,20,female,2023-01
+105,Human Stool,Escherichia coli,0.03,R,20,female,2023-01
+106,Human Stool,Escherichia coli,0.5,R,22,male,2023-01
+107,Human Stool,Escherichia coli ,0.0625,I,37,female,2023-01
+108,Human Stool,Escherichia coli ,0.0625,R,45,male,2023-01
+109,Human Stool,Escherichia coli ,0.125,R,42,male,2023-01
+110,Human Stool,Escherichia coli,0.0625,I,44,female,2023-01
+111,Human Stool,Escherichia coli,0.0625,R,46,female,2023-01
+112,Human Stool,Escherichia coli,0.0625,R,44,male,2023-01
+113,Human Stool,Escherichia coli,0.25,I,43,female,2023-02
+114,Human Stool,Escherichia coli,0.03,I,67,female,2023-02
+115,Human Stool,Escherichia coli,0.03,R,55,female,2023-02
+116,Human Stool,Escherichia coli,0.0625,R,43,male,2023-02
+117,Human Stool,Escherichia coli,0.125,R,34,female,2023-02
+118,Human Stool,Escherichia coli,0.0625,I,67,male,2023-02
+119,Human Stool,Escherichia coli,0.0625,I,65,male,2023-02
+120,Human Stool,Escherichia coli,0.0625,R,68,female,2023-02
+121,Human Stool,Escherichia coli,0.0625,R,58,male,2023-02
+122,Human Stool,Escherichia coli,0.0625,R,65,female,2023-02
+123,Human Stool,Escherichia coli,0.0625,R,59,female,2023-02
+124,Human Stool,Escherichia coli,0.125,R,62,female,2023-02
+125,Human Stool,Escherichia coli,0.25,R,19,male,2023-02
+126,Human Stool,Citrobacter freundii,0.0625,R,67,female,2023-02
+127,Human Stool,Citrobacter freundii,0.25,R,54,male,2023-03
+128,Human Stool,Escherichia coli,0.125,I,22,female,2023-03
+129,Human Stool,Escherichia coli,0.25,I,67,female,2023-03
+130,Human Stool,Escherichia coli,0.0625,R,71,female,2023-03
+131,Human Stool,Escherichia coli,0.0625,R,46,male,2023-03
+132,Human Stool,Escherichia coli,0.125,R,68,female,2023-03
+133,Human Stool,Escherichia coli,0.125,R,20,male,2023-03
+134,Human Stool,Escherichia coli,0.125,I,72,female,2023-03
+135,Human Stool,Klebsiella pneumoniae,0.125,I,56,female,2023-03
+136,Human Stool,Citrobacter freundii,0.0625,R,75,female,2023-03
+137,Human Stool,Citrobacter freundii,0.125,R,89,male,2023-03
+138,Human Stool,Klebsiella pneumoniae,0.5,R,73,female,2023-04
+139,Human Stool,Escherichia coli,0.125,I,88,male,2023-04
+140,Human Stool,Citrobacter freundii,0.0625,R,64,female,2023-04
+141,Human Stool,Escherichia coli,0.125,R,20,female,2023-04
+142,Human Stool,Citrobacter freundii ,0.25,I,66,male,2023-04
+143,Human Stool,Enterobacter cloacae,0.5,I,55,male,2023-04
+144,Human Stool,Escherichia coli,0.125,R,67,female,2023-04
+145,Human Stool,Escherichia coli ,0.0625,I,82,female,2023-04
+146,Human Stool,Escherichia coli ,0.0625,I,77,female,2023-04
+147,Human Stool,Escherichia coli ,0.0625,I,75,male,2023-04
+148,Human Stool,Escherichia coli ,0.0625,R,66,female,2023-04
+149,Human Stool,Escherichia coli ,0.0625,R,65,male,2023-04
+150,Human Stool,Escherichia coli ,0.0625,R,87,female,2023-05
+151,Human Stool,Escherichia coli ,0.0625,R,34,male,2023-05
+152,Human Stool,Escherichia coli,0.0625,I,28,male,2023-05
+153,Human Stool,Escherichia coli,0.0625,R,30,female,2023-05
+154,Human Stool,Escherichia coli,0.0625,R,46,female,2023-05
+155,Human Stool,Escherichia coli,0.0625,R,48,male,2023-05
+156,Human Stool,Escherichia coli,0.0625,R,52,male,2023-05
+157,Human Stool,Escherichia coli,0.0625,R,59,female,2023-05
+158,Human Stool,Escherichia coli,0.125,I,65,female,2023-05
+159,Human Stool,Escherichia coli,0.03,R,72,female,2023-05
+160,Human Stool,Escherichia coli,0.06,R,75,female,2023-05
+161,Human Stool,Enterobacter cloacae,0.5,I,72,male,2023-06
+162,Human Stool,Enterobacter cloacae,0.125,R,68,male,2023-06
+163,Human Stool,Enterobacter cloacae,0.125,R,54,male,2023-06
+164,Human Stool,Citrobacter freundii ,0.25,R,58,female,2023-06
+165,Human Stool,Enterobacter cloacae,0.0625,R,81,female,2023-06
+166,Human Stool,Escherichia coli,0.03,I,77,female,2023-06
+167,Human Stool,Escherichia coli,0.03,R,72,male,2023-06
+168,Human Stool,Escherichia coli,0.0625,R,68,female,2023-06
+169,Human Stool,Klebsiella pneumoniae,0.125,R,59,female,2023-07
+170,Human Stool,Klebsiella pneumoniae,0.25,R,62,female,2023-07
+171,Human Stool,Klebsiella pneumoniae,2,R,57,male,2023-07
+172,Human Stool,Escherichia coli,0.125,I,59,female,2023-07
+173,Human Stool,Escherichia coli,0.125,R,64,male,2023-07
+174,Human Stool,Enterobacter cloacae,0.125,I,49,female,2023-07
+175,Human Stool,Klebsiella pneumoniae,0.25,I,55,female,2023-07
+176,Human Stool,Klebsiella pneumoniae,0.25,R,58,female,2023-07
+177,Human Stool,Klebsiella pneumoniae,0.25,R,63,male,2023-07
+178,Human Stool,Escherichia coli,0.03,I,67,female,2023-08
+179,Human Stool,Escherichia coli,0.03,R,57,male,2023-08
+180,Human Stool,Escherichia coli,0.125,I,82,female,2023-08
+181,Human Stool,Escherichia coli,0.25,R,77,female,2023-08
+182,Human Stool,Escherichia coli,0.25,R,63,male,2023-08
+183,Pelvic Fluid,Citrobacter freundii ,0.25,S,70,male,2023-08
+184,Sinus,Klebsiella pneumoniae,0.25,S,64,female,2023-08
+204,Urine,Escherichia coli,0.0625,S,68,female,2023-08
+205,Urine,Escherichia coli,0.0625,S,79,female,2023-08
+206,Urine,Escherichia coli,0.0625,S,83,male,2023-08
+207,Urine,Escherichia coli,0.03,S,59,female,2023-09
+208,Urine,Escherichia coli,0.0625,S,62,male,2023-09
+209,Urine,Escherichia coli,0.0625,S,60,female,2023-09
+210,Urine,Klebsiella pneumoniae,0.0625,S,55,male,2023-09
+211,Urine,Escherichia coli,0.125,S,70,male,2023-09
+212,Urine,Escherichia coli,0.0625,S,78,female,2023-09
+213,Urine,Escherichia coli,0.0625,S,67,female,2023-09
+214,Urine,Escherichia coli,0.125,S,79,male,2023-09
+215,Urine,Escherichia coli,0.0625,S,59,male,2023-09
+216,Urine,Escherichia coli ,0.0625,S,63,female,2023-09
+217,Urine,Escherichia coli,0.0625,S,54,female,2023-10
+218,Urine,Escherichia coli ,0.03,S,60,male,2023-10
+219,Urine,Klebsiella pneumoniae,0.03,S,52,male,2023-10
+220,Urine,Enterobacter cloacae,1,S,50,female,2023-10
+221,Urine,Enterobacter cloacae,0.0625,S,23,male,2023-10
+222,Urine,Enterobacter cloacae,2,S,56,female,2023-10
+223,Urine,Escherichia coli,0.0625,S,68,female,2023-11
+224,Urine,Citrobacter freundii,0.125,S,85,male,2023-11
+225,Urine,Escherichia coli,0.125,S,49,female,2023-11
+226,Urine,Klebsiella pneumoniae,0.5,S,63,female,2023-11
+227,Urine,Escherichia coli,0.0625,S,75,male,2023-11
+228,Urine,Escherichia coli,0.03,S,66,female,2023-12
+229,Urine,Klebsiella pneumoniae,0.25,S,56,female,2023-12
+230,Urine,Escherichia coli,0.0625,S,37,male,2023-12
+231,Wound,Klebsiella pneumoniae,0.125,S,68,male,2023-12

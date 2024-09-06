@@ -1,0 +1,337 @@
+---
+title: |
+    | MOTION Lab Summer 2024 Code Club
+    | Session III: Data Visualization in R
+    | Part 1
+date: '`r format(Sys.time(), "%B %d, %Y")`'
+geometry: "left = 2cm, right = 2cm, top = 1cm, bottom = 1.5cm"
+output: 
+  pdf_document:
+    latex_engine: xelatex
+    extra_dependencies: ["framed"]
+mainfont: Arial
+urlcolor: blue
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, 
+                      fig.width = 6, fig.height = 4)
+```
+
+# Presenters:
+- Laura Cowden (laura.cowden@pennmedicine.upenn.edu) and
+- Leigh Cressman (crel@pennmedicine.upenn.edu)  
+            
+# Learning objectives:
+1) Become familiar with R Markdown
+2) Become familiar with ggplot2 syntax
+3) Understand which plot is best suited for your data
+4) Understand how to generate graphs in R  
+ 
+# Why do we need to visualize our data?
+- Understand distribution of data (this will inform appropriate statistical test)
+- Check for problems with data
+- Present findings to group members
+- Generate plots for manuscripts
+
+# Why should we use R to visualize data?
+- Reproducibility and transparency
+- Flexibility
+- Standard in scientific community for manuscripts
+
+**Further reading on data visualization:**  
+[Edward Tufte's work on displaying quantitative information](https://www.edwardtufte.com/tufte/books_vdqi)  
+
+\newpage  
+
+&nbsp;
+
+# ggplot2
+We will focus on this package today. Graphs can also be created in other packages (e.g., base R, lattice). ggplot2 was developed by Hadley Wickham (tidyverse) and his team.  
+**"gg"** stands for "grammar of graphics," which is a general scheme for breaking up graphs into semantic components such as scales and layers.  
+Part of tidyverse: only need to run **library(tidyverse)**  
+[Additional reading on ggplot2 package](https://ggplot2.tidyverse.org/)
+
+
+
+# R Markdown  
+We are teaching this session using an R Markdown file (.Rmd) instead of the .R script files which we used in previous sessions. R Markdown is a literate programming tool: you have a source file with two representations:   
+1) Code which is understood by a compiler or interpreter  
+2) Formatted documentation which is "woven" (or "knitted") from the literate source  
+
+R Markdown allows you to combine commentary with code to create an output document with results and graphs in various output formats (e.g., PDF, Word, HTML). This tool may be useful for you to summarize lab data and create a report for your PI.  
+
+You must surround chunks of R code with ```. You can include arguments to suppress the code which is run from showing up in the output document. Finally, you can use the **knitr** package to knit the document. This executes the code chunks and creates the output document.  
+[Additional reading on R markdown](https://r4ds.had.co.nz/r-markdown.html#:~:text=R%20Markdown%20provides%20an%20unified,files%2C%20slideshows%2C%20and%20more.)  
+[knitr documentation](https://cran.r-project.org/web/packages/knitr/knitr.pdf)
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+
+**LAURA'S SECTIONS**  
+ 
+
+\newpage  
+
+*The data in this section were masked and partially fabricated for presentation purposes. The variables were originally collected for our MERLIN study.
+
+# Histograms and Density Plots  
+These plots are useful for examining the distribution of numeric data.  
+Histograms split a continuous measure into bins or groups. Data points are grouped into bins.  
+
+&nbsp;
+
+**Basic histogram**    
+``` {r}
+
+# load libraries
+library(tidyverse)
+
+# import dataset
+lab_data <- read_csv("./lab_data_session3.csv")
+
+# plot age data 
+ggplot(lab_data, aes(x = patient_age, na.rm = T)) + # remove NAs
+  geom_histogram(binwidth = 5)
+
+
+```
+
+\newpage
+
+**Histogram with improvements**  
+``` {r}
+
+ggplot(lab_data, aes(x = patient_age, na.rm = T)) +             # remove NAs
+  geom_histogram(binwidth = 2, fill = "steelblue") +            # ajust width of bin; select color
+  labs(title = "Study Patient Age Distribution",                # add plot title
+       x = "Age (years)",                                       # add x-axis label
+       y = "Density") +                                         # add y-axis label
+  theme(plot.title = element_text(size = 14, face = "bold",     # set size and face of plot title
+                                  hjust = 0.5, color = "black"), # center plot title; make text color black
+        axis.title.x = element_text(size = 12, color = "black"), # set size and color of x-axis title 
+        axis.title.y = element_text(size = 12, color = "black"), # set size and color of y-axis title
+        axis.text.x = element_text(size = 10),                   # set size and color of x-axis tick labels
+        axis.text.y = element_text(size = 10))                   # set size and color of y-axis tick labels
+
+```
+
+**Is patient age normally distributed?**    
+
+\newpage
+
+&nbsp;  
+
+**Density Plot:** (smoothed-out version of histogram)    
+
+&nbsp;
+
+``` {r}
+
+ggplot(lab_data, aes(x = patient_age, na.rm = T)) +             # remove NAs
+geom_density(color = "plum", fill = "steelblue",                # blue fill with plum outline
+               linewidth = 1.2) +                               # adjust width of line
+  labs(title = "Study Patient Age Distribution",                # add plot title
+       x = "Age (years)",                                       # add x-axis label
+       y = "Density") +                                         # add y-axis label
+  theme(plot.title = element_text(size = 14, face = "bold", 
+                                  hjust = 0.5, color = "black"), # hjust centers plot title
+        axis.title.x = element_text(size = 12, color = "black"),
+        axis.title.y = element_text(size = 12, color = "black"),
+        axis.text.x = element_text(size = 10),
+        axis.text.y = element_text(size = 10)) 
+
+```
+&nbsp;  
+&nbsp;  
+
+**Density plot of ceftolozane/tazobactam MIC values:**  
+
+&nbsp;
+
+``` {r}
+
+ggplot(lab_data, aes(x = ct_value, na.rm = T)) +                 # remove NAs
+geom_density(color = "plum", fill = "steelblue",
+               linewidth = 1.2) +
+  labs(title = "Ceftolozane/Tazobactam MIC values",              # add plot title
+       x = "MIC Value",                                          # add x-axis label
+       y = "Density") +                                          # add y-axis label
+  theme(plot.title = element_text(size = 14, face = "bold", 
+                                  hjust = 0.5, color = "black"), # hjust centers plot title
+        axis.title.x = element_text(size = 12, color = "black"),
+        axis.title.y = element_text(size = 12, color = "black"),
+        axis.text.x = element_text(size = 10),
+        axis.text.y = element_text(size = 10)) 
+
+```
+
+\newpage  
+
+
+# Barplot
+Use to show the relationship between a numeric and a categorical variable.  
+
+&nbsp;
+
+**Barplot of organism**  
+
+&nbsp;
+
+``` {r}
+
+lab_data |> group_by(maldi_id) |> 
+  summarize(org_count = n()) |>                                    # get count of organisms to pipe into ggplot
+  ggplot(aes(x = maldi_id, y = org_count)) +
+  geom_bar(stat = "identity", fill = "steelblue", width = 0.8) +
+  labs(title = "Organism Count by Type",                           # add plot title
+       x = "Organism",                                             # add x-axis label
+       y = "Count (N)") +                                          # add y-axis label
+  theme(plot.title = element_text(size = 14, face = "bold", 
+                                  hjust = 0.5, color = "black"),   # hjust centers plot title
+        axis.title.x = element_text(size = 12, color = "black"),
+        axis.title.y = element_text(size = 12, color = "black"),
+        axis.text.x = element_text(size = 10),       
+        axis.text.y = element_text(size = 10)) 
+
+
+```
+&nbsp;
+
+**Stacked barplot**  
+
+&nbsp;
+
+``` {r}
+
+lab_data |> group_by(maldi_id, specimen_type) |> 
+  summarize(org_count = n()) |>                                             # aggregate by organism and specimen type
+  ggplot(aes(x = maldi_id, y = org_count, fill = specimen_type)) +          # fill bars based on specimen type
+  geom_bar(position = "stack", stat = "identity", width = 0.8) +            # make stacked bar graoh
+  scale_fill_manual(values = c("steelblue", "aquamarine", 
+                               "cyan", "skyblue", "dodgerblue4")) +
+  labs(title = "Organism Count by Specimen Type",                           # add plot title
+       x = "Organism",                                                      # add x-axis label
+       y = "Count (N)",                                                     # add y-axis label
+       fill = "Specimen") +                                                 # legend title 
+  theme_bw() +
+  theme(plot.title = element_text(size = 14, face = "bold", 
+                                  hjust = 0.5, color = "black"),            # hjust centers plot title
+        axis.title.x = element_text(size = 12, color = "black"),
+        axis.title.y = element_text(size = 12, color = "black"),
+        axis.text.x = element_text(size = 10, angle = 10, vjust = 0.8),     # tilt tick mark labels and shift 
+        axis.text.y = element_text(size = 10)) 
+
+
+```
+\newpage
+
+&nbsp;
+
+**Move legend to bottom**
+
+&nbsp;
+
+``` {r}
+
+lab_data |> group_by(maldi_id, specimen_type) |> 
+  summarize(org_count = n()) |>                                       # aggregate by organism and specimen type
+  ggplot(aes(x = maldi_id, y = org_count, fill = specimen_type)) +
+  geom_bar(position = "stack", stat = "identity", width = 0.8) +
+  #scale_color_viridis() +
+  scale_fill_manual(values = c("steelblue", "aquamarine", 
+                               "cyan", "skyblue", "dodgerblue4")) +
+  labs(title = "Organism Count by Specimen Type",                     # add plot title
+       x = "Organism",                                                # add x-axis label
+       y = "Count (N)",                                               # add y-axis label
+       fill = "Specimen") +
+  theme_bw() +
+  theme(plot.title = element_text(size = 14, face = "bold", 
+                                  hjust = 0.5, color = "black"),      # hjust centers plot title
+        axis.title.x = element_text(size = 12, color = "black"),
+        axis.title.y = element_text(size = 12, color = "black"),
+        axis.text.x = element_text(size = 10),     
+        axis.text.y = element_text(size = 10),
+        legend.title = element_blank(),                               # remove legend title 
+        legend.position = "bottom")                                   # move legend to bottom
+
+
+```
+
+&nbsp;
+
+**Organism count by ceftolozane/tazobactam MIC interpretation**  
+
+&nbsp;
+
+``` {r}
+
+# reorder factor levels of susceptibility values
+# this will reorder legend labels
+
+lab_data |> group_by(maldi_id, ct_interpretation) |> 
+  summarize(org_count = n()) |>                                     # aggregate by organism and interpretation
+  mutate(ct_description = recode_factor(ct_interpretation,
+                                        "I" = "Intermediate",
+                                        "R" = "Resistant",
+                                        "S" = "Susceptible")) |> 
+  mutate(ct_description = factor(ct_description, levels = c("Resistant", "Intermediate", "Susceptible"))) |> 
+  ggplot(aes(x = maldi_id, y = org_count, fill = ct_description)) +
+  geom_bar(position = "stack", stat = "identity", width = 0.8) +
+  scale_fill_manual(values = c("steelblue", "aquamarine", 
+                               "skyblue")) +
+  labs(title = "Organism Count by Ceftolozane/Tazobactam \n MIC Interpretation",  # add line break in plot title
+       x = "Organism",
+       y = "Count (N)",
+       fill = "Interpretation") +
+  theme_bw() +
+  theme(plot.title = element_text(size = 14, face = "bold", 
+                                  hjust = 0.5, color = "black"),                # hjust centers plot title
+        axis.title.x = element_text(size = 12, color = "black"),
+        axis.title.y = element_text(size = 12, color = "black"),
+        axis.text.x = element_text(size = 10),         
+        axis.text.y = element_text(size = 10),
+        legend.position = "bottom") 
+
+
+```
+&nbsp;
+
+# Line Graphs  
+Use with time series data.
+
+&nbsp;
+
+``` {r}
+
+# line graph
+lab_data  |>  group_by(collect_month_yr, maldi_id) |>                           
+  summarize(org_count = n()) |>                                             # aggregate data by month and organism
+  ggplot(aes(x = collect_month_yr, y = org_count)) +
+  scale_color_viridis_d() +                                                 # use Viridis color scale
+  #scale_color_brewer(palette = "Paired") +
+  geom_line(aes(color = maldi_id, group = maldi_id), linewidth = 1) +       # line color based on maldi_id grouping
+  geom_point(aes(shape = maldi_id, color = maldi_id), size = 2.4) +         # shape based on maldi_id grouping
+  labs(title = "Organism Count by Month",                                   # add plot title
+       x = "Culture Collect Month",                                         # add x-axis label
+       y = "Count (N)") +                                                   # add y-axis label
+  theme_bw() +                                                              # use black and white theme
+  theme(plot.title = element_text(size = 14, face = "bold", 
+                                  hjust = 0.5, color = "black"),            # hjust centers plot title
+        axis.title.x = element_text(size = 12, color = "black"),
+        axis.title.y = element_text(size = 12, color = "black"),
+        axis.text.x = element_text(size = 10, angle = 20, vjust = 0.8),     # tilt tick mark labels
+        axis.text.y = element_text(size = 10),
+        legend.title = element_blank(),                                     # remove legend title
+        legend.position = "bottom")                                         # move legend below plot
+  
+  
+  
+```
+
+**Viridis** scales can be perceived by users with common types of color blindness.  
+[Further reading on viridis](https://www.rdocumentation.org/packages/ggplot2/versions/3.2.0/topics/scale_colour_viridis_d)
