@@ -1,0 +1,338 @@
+---
+title: |
+    | MOTION Lab Summer 2024 Code Club
+    | Session IV: Intro to Statistical Analysis in R
+date: '`r format(Sys.time(), "%B %d, %Y")`'
+geometry: "left = 2cm, right = 2cm, top = 1cm, bottom = 1.5cm"
+output: 
+  pdf_document:
+    latex_engine: xelatex
+    extra_dependencies: ["framed"]
+mainfont: Arial
+urlcolor: blue
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# Presenter:
+Leigh Cressman (crel@pennmedicine.upenn.edu) 
+
+# Agenda
+1) Descriptive analysis
+2) Bivariable analysis
+3) Multivariable analysis
+
+# IMPALA Study
+- Conducted at 6 different hospitals and clinics in Botswana in 2020
+- Outcome is colonization with extended-spectrum cephalosporin-resistant enterobacterales (ESCrE)
+- The dataset included here is not actual data from the study. All values have been randomly generated.   
+The data used in the in-person session were data from the actual study.
+
+
+# Descriptive analysis  
+**Objective: characterize the population**  
+1) Measures of central tendency  
+2) Measures of variability  
+3) Measures of frequency distribution  
+
+&nbsp;
+
+Use psych package to generate descriptive statistics of numeric variables.  
+
+[Read more about psych::describe.](https://cran.r-project.org/web/packages/psych/psych.pdf)  
+
+``` {r, echo = FALSE, message = FALSE, warning = FALSE}
+
+library(tidyverse)
+library(psych)
+library(knitr)
+library(gtsummary)
+library(broom)
+
+# import test dataset
+inpatient_data <- read_csv("./impala_randomly_generated_dataset_session4.csv")
+
+# get summary stats for numeric variables
+summary_table <- inpatient_data |>
+  select(participant_age, total_abx_days, days_to_sample) |> 
+  psych::describe(quant = c(.25, .75))  |>                      # return 25th and 75th percentiles (Q1 and Q3)
+  select(n, min, Q0.25, median, Q0.75, max, mean, sd) 
+
+```
+  
+
+
+**Summary statistics for numeric variables**  
+*Can add more formatting.*  
+``` {r, echo = FALSE, message = FALSE}
+# generate formatted table
+kable(summary_table, align = "lcccccccc")
+
+```
+
+\newpage
+
+**Check distribution of age**  
+
+&nbsp;
+
+``` {r, echo = FALSE, message = FALSE, fig.width = 6, fig.height = 4}
+
+ggplot(inpatient_data, aes(x = participant_age, na.rm = T)) +   # remove NAs
+  geom_histogram(binwidth = 2, fill = "steelblue") +            # ajust width of bin; select color
+  labs(title = "Study Participant Age Distribution",                # add plot title
+       x = "Age (years)",                                       # add x-axis label
+       y = "Density") +                                         # add y-axis label
+  theme_bw() +
+  theme(plot.title = element_text(size = 14, face = "bold",     # set size and face of plot title
+                                  hjust = 0.5, color = "black"), # center plot title; make text color black
+        axis.title.x = element_text(size = 12, color = "black"), # set size and color of x-axis title 
+        axis.title.y = element_text(size = 12, color = "black"), # set size and color of y-axis title
+        axis.text.x = element_text(size = 10),                   # set size and color of x-axis tick labels
+        axis.text.y = element_text(size = 10))                   # set size and color of y-axis tick labels
+
+```
+
+**Run Shapiro-Wilk Normality Test**  
+W statistic close to 1 indicates data are normally distributed.  
+P-value < 0.05 indicates data are significantly different from a normal distribution.  
+``` {r, echo = FALSE, message = FALSE}
+
+# Shapiro-Wilk normality test
+stats::shapiro.test(inpatient_data$participant_age) # not normally distributed
+
+```
+
+
+**Based on distribution, we will report median (Q1 - Q3) patient age for this dataset.**  
+
+&nbsp;
+
+[See results section of IMPALA manuscript to view all descriptive statistics reported.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10321695/)  
+*The IMPALA manuscript linked here is for a different subset of patients than the example dataset we are using, so the numbers will not align.*
+
+
+\newpage
+
+# Bivariable analysis  
+**Objective: compare characteristics, medical history, etc., of cases and controls.**  
+**Identify statistically significant differences between cases and controls.**   
+Cases: ESCrE colonized participants (n = 219)   
+Controls: Non-colonized participants (n = 250)  
+
+**Statistical significance**  
+["In research, statistical significance measures the probability of the null hypothesis being true compared to the acceptable level of uncertainty regarding the true answer."](https://www.ncbi.nlm.nih.gov/books/NBK459346/)
+
+&nbsp;
+
+**Significance level: the probability the researcher is willing to be incorrect**  
+Typically set alpha to 0.05: we are willing to be incorrect 5% of the time.  
+Tests for comparing groups generate a *P* value.  
+*P* values < 0.05 indicate statistical significance.  
+Variables identified as statistically significant between cases and controls will be examined in later analyses.  
+
+
+&nbsp;
+
+**Age example**  
+Is there a statistically significant difference in age between cases and controls?  
+
+``` {r, echo = FALSE, message = FALSE}
+
+# look at median age for cases and controls
+inpatient_data |> 
+  select(participant_age, is_escre) |> 
+  base::split(inpatient_data$is_escre) |>  # use split function to break is_escre into cases and controls
+  purrr::map(base::summary)                # apply summary function to each element of participant_age column
+
+
+```
+
+
+Based on descriptive analysis, we know that the age variable is not normally distributed.  
+If our numeric variable were normally distributed, we could use [Independent Samples *t* Test.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6813708/)    
+[Instead, we will use Wilcoxon Rank Sum test.](https://library.virginia.edu/data/articles/the-wilcoxon-rank-sum-test)
+
+``` {r, echo = FALSE, message = FALSE}
+
+# run Wilcoxon rank sum test
+wilcox.test(participant_age ~ is_escre, data = inpatient_data)
+
+
+```
+*P* value > 0.05, so we do not reject the null hypothesis.  
+Even though this was not significant, we included participant age in our multivariable analysis for IMPALA.  
+
+
+
+\newpage
+
+# Checking for independence between categorical variables  
+
+[**Chi-square test of Independence**](https://online.stat.psu.edu/stat500/lesson/8/8.1):   
+- compare observed and expected frequencies to determine if observed data deviate from expected frequencies  
+- should not use with small expected frequencies (if more than 20% of cells have expected frequencies below 5)  
+
+
+[**Fisher's Exact Test**](https://online.stat.psu.edu/stat504/lesson/4/4.5):   
+- use with small *n* or small expected frequencies  
+
+
+
+**Example: count of participants with diabetes**  
+
+``` {r}
+
+# determine expected frequencies
+# expected count for each cell is (row total * column total)/total sample size
+diabetes_chi <- stats::chisq.test(table(inpatient_data$diabetes_mellitus, inpatient_data$is_escre))
+diabetes_chi
+diabetes_chi$expected
+diabetes_chi$observed
+
+```
+
+Okay to use chi-square test    
+
+``` {r, echo = FALSE, message = FALSE}
+
+# check with Fisher test
+stats::fisher.test(inpatient_data$diabetes_mellitus, inpatient_data$is_escre, alternative = "two.sided")
+
+```
+
+N is small enough that Fisher's test could work here, too.  
+
+**Example: count of participants with 3 or more hospital visits to receive care in the past 6 months**  
+``` {r}
+
+# determine expected frequencies
+# expected count for each cell is (row total * column total)/total sample size
+hosp_visit3_chi <- stats::chisq.test(table(inpatient_data$hosp_visit3, inpatient_data$is_escre))
+hosp_visit3_chi
+hosp_visit3_chi$expected
+hosp_visit3_chi$observed
+
+```
+
+
+``` {r}
+
+# run Fisher's test
+stats::fisher.test(inpatient_data$hosp_visit3, inpatient_data$is_escre, alternative = "two.sided")
+
+
+```
+
+Significant difference in hospital visits between cases and controls. We will include this variable in our multivariable model.  
+
+
+**Example: count of participants who tended swine at home at least once per week in the past 6 months**  
+
+``` {r}
+
+# determine expected frequencies
+# expected count for each cell is (row total * column total)/total sample size
+tend_swine_chi <- stats::chisq.test(table(inpatient_data$tend_swine_home, inpatient_data$is_escre))
+tend_swine_chi
+tend_swine_chi$expected
+tend_swine_chi$observed
+
+```
+
+
+
+``` {r}
+
+# run Fisher's test
+stats::fisher.test(inpatient_data$tend_swine_home, inpatient_data$is_escre, alternative = "two.sided")
+
+
+```
+
+
+\newpage
+
+**One can also run a series of logistic regression models with one independent variable in each model to assess relationships and identify which independent variables should be included in multivariable model.**  
+
+**broom::tidy** can also be used in combination with other stats functions (e.g., fisher.test) to perform statistical test on all columns of df and generate tidy output.  
+
+
+``` {r}
+
+# take relevant column names 
+inpatient_data |> 
+  select(-subject_id, -is_escre) |>                 # remove ID and outcome variable
+  names() %>%                                       # get column names
+  paste("is_escre ~", .) %>%                        # concatenate dependent var with each independent var
+  purrr::map_df(~ broom::tidy(glm(as.formula(.x),   # input strings from previous step as formula into glm                                                                                    # and summarize components of model
+                   data = inpatient_data,           # specify dataframe
+                   family = "binomial"),            # specify type of generalized linear model 
+               estimate = TRUE,                     # include estimate of regression term
+               conf.int = TRUE,                     # include confidence interval in output
+               exponentiate = TRUE)) %>%            # exponentiate regression coefficient (generate odds ratio)
+  filter(term != "(Intercept)") %>%                 # remove intercept from output
+  arrange(p.value) %>%                              # order p-values from smallest to largest
+  rename("Odds Ratio" = estimate,                   # rename columns for output table
+         Variable = term,
+         SE = std.error,
+         Statistic = statistic,
+         "P-value" = p.value,
+         "95% CI Lower" = conf.low,
+         "95% CI Upper" = conf.high)
+
+```
+
+*Can do additional formatting.*
+
+# Multivariable analysis
+Our dependent variable is dichotomous (participant had or did not have an ESCrE). We will use logistic regression to examine the association of the independent variables (identified in bivariable analysis) with having an ESCrE.  
+
+If we were trying to predict a continuous outcome, we might use linear regression.
+
+In reality, there were many more independent variables which we tested in our multivariable models. The example below only shows our final (or mostly final) model.  
+
+As previously noted, the dataset used here was randomly generated and does not represent the actual study data. In our "real" final model, most of the predictors were significant or approaching significance.
+
+``` {r}
+
+# fit logistic regression model
+main_model <- glm(is_escre ~ participant_age + days_to_sample + total_abx_days +
+                 hosp_visit3 + tend_swine_home + travel_6m,
+                data = inpatient_data, family = "binomial")
+
+# check model output
+main_model |>
+  gtsummary::tbl_regression(                                           # takes regression model and returns                                                                                                       # formatted table
+    exponentiate = TRUE,                                               # calculate odds ratios
+    label = list(participant_age ~ "Participant age",                  # rename 
+                  days_to_sample ~ "Days from enrollment to sampling",
+                 total_abx_days ~ "Total days of antibiotic therapy",
+                 hosp_visit3 = "Visited hospital 3+ times",
+                 tend_swine_home = "Tended swine at home",
+                 travel_6m = "Traveled outside the country")) |>
+  bold_labels() 
+
+```
+
+[Read more about gtsummary.](https://www.danieldsjoberg.com/gtsummary/articles/tbl_regression.html)  
+
+
+**check for multicollinearity (when independent variables are correlated)**
+``` {r}
+car::vif(main_model)
+
+```
+Variance inflation factors are low, so there appear to be no issues.  
+
+
+
+
+
+
+
+# Other useful packages and functions:  
+- [table1 package for generating tables of descriptive statistics](https://cran.r-project.org/web/packages/table1/vignettes/table1-examples.html)
+- [GGally::ggpairs - allows you to plot many independent variables against the outcome variable simultaneously](https://r-charts.com/correlation/ggpairs/)
